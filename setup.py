@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__author__ = "PackageOwner"
-__license__ = "BSD-2-Clause"
-__email__ = "email"
+__author__ = "Andrea Failla"
+__license__ = ""
+__email__ = "andrea.failla@phd.unipi.it"
 
 
 here = path.abspath(path.dirname(__file__))
@@ -18,13 +18,13 @@ with open(path.join(here, "requirements.txt"), encoding="utf-8") as f:
 
 
 setup(
-    name="package_name",
+    name="lifecycles",
     version="0.0.1",
-    license="BSD-Clause-2",
+    license="",
     description="Package description",
-    url="https://github.com/USERNAME/project",
-    author="Author Name",
-    author_email="email",
+    url="https://github.com/andreafailla/lifecycles",
+    author="Andrea Failla",
+    author_email="andrea.failla@phd.unipi.it",
     classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha
@@ -35,7 +35,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Build Tools",
         # Pick your license as you wish (should match "license" above)
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: ",
         "Operating System :: POSIX :: Other",
         "Operating System :: MacOS",
         # Specify the Python versions you support here. In particular, ensure
@@ -54,8 +54,8 @@ setup(
             "*.test.*",
             "test.*",
             "test",
-            "package_name.test",
-            "package_name.test.*",
+            "lifecycles.test",
+            "lifecycles.test.*",
         ]
     ),
 )
