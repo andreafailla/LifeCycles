@@ -8,7 +8,8 @@ __all__ = [
     "contribution_factor",
     "difference_factor",
     "attribute_entropy_change",
-    "purity"
+    "purity",
+    "event_typicality",
 ]
 
 
@@ -128,10 +129,24 @@ def purity(labels: list) -> tuple:
     compute the purity of a set of labels. Purity is defined as the relative frequency of the most frequent attribute value
 
     :param labels:
-    :param target_labels: the atttributes of the target set
     :return: a tuple of the most frequent attribute value and its frequency
     """
-    mca, freq = Counter(labels).most_common(1)[0]
-    return mca, freq / len(labels)
+    most_common_attribute, freq = Counter(labels).most_common(1)[0]
+    return most_common_attribute, freq / len(labels)
 
 
+def event_typicality(event_scores: dict) -> tuple:
+    """
+    compute the event's name and its typicality score.
+    The typicality score is the highest score among all events scores.
+
+    :param event_scores: a dictionary keyed by event name and valued by the event score
+    :return: a tuple of the event name and its typicality score
+    """
+    highest_score = 0
+    event = ""
+    for ev, score in event_scores.items():
+        if score > highest_score:
+            highest_score = score
+            event = event
+    return event, highest_score
