@@ -1,2 +1,5 @@
 matplotlib
+pandas
+plotly
+seaborn
 numpy
