@@ -11,17 +11,19 @@ class LifeCycle(object):
     def __init__(self, dtype: type = int) -> None:
 
         self.dtype = dtype
-        self.to_int_mapping = dict() if dtype != int else None
+        self.to_int_mapping = dict()  # mapping to int if needed
 
         self.tids = []
         self.named_sets = defaultdict(set)
         self.tid_to_named_sets = defaultdict(list)
         self.attributes = defaultdict(dict)
 
-    ############################## Convencience get methods ##########################################
+    ############################## Convenience get methods ##########################################
     def temporal_ids(self) -> list:
         """
-        retrieve the temporal ids of the dynaset
+        retrieve the temporal ids of the LyfeCycle.
+        Temporal ids are integers that represent the observation time of a partition.
+
 
         :return: a list of temporal ids
         """
@@ -29,7 +31,8 @@ class LifeCycle(object):
 
     def universe_set(self) -> set:
         """
-        retrieve the universe set
+        retrieve the universe set.
+        The universe set is the union of all sets in the LifeCycle
 
         :return: the universe set
         """
@@ -37,6 +40,15 @@ class LifeCycle(object):
         for set_ in self.named_sets.values():
             universe = universe.union(set_)
         return universe
+
+    def set_ids(self) -> list:
+        """
+        retrieve the temporal ids of the lifecycle. Each id is of the form 'tid_sid' where tid is the temporal id and
+        sid is the set id. The set id is a unique identifier of the set within the temporal id.
+
+        :return: a list of ids of the temporal sets
+        """
+        return list(self.named_sets.keys())
 
     ############################## Partition methods ##########################################
     def add_partition(self, partition: list) -> None:
@@ -52,7 +64,7 @@ class LifeCycle(object):
         self.tids.append(tid)
 
         for i, group in enumerate(partition):
-            name = str(tid) + '_' + str(i)
+            name = str(tid) + "_" + str(i)
             self.tid_to_named_sets[str(tid)].append(name)
 
             if self.dtype in [int, float, str]:
@@ -122,14 +134,31 @@ class LifeCycle(object):
             return self.attributes[attr_name][of]
 
     ############################## Set methods ##########################################
-    def get_set(self, name: str) -> set:
+    def get_set(self, set_id: str) -> set:
         """
-        retrieve a set by name
+        retrieve a set by id
 
-        :param name: the name of the set to retrieve
+        :param set_id: the name of the set to retrieve
         :return: the set corresponding to the given name
         """
-        return self.named_sets[name]
+        return self.named_sets[set_id]
+
+    def filter_on_set_size(self, min_size: int = 1, max_size: int = None) -> None:
+        """
+        remove sets that do not meet the size criteria
+
+        :param min_size: the minimum size of the sets to keep
+        :param max_size: the maximum size of the sets to keep
+        :return:
+        """
+
+        if max_size is None:
+            max_size = len(self.universe_set())
+
+        for name, set_ in self.named_sets.copy().items():
+            if len(set_) < min_size or len(set_) > max_size:
+                del self.named_sets[name]
+                self.tid_to_named_sets[name.split("_")[0]].remove(name)
 
     ############################## Element-centric methods ##########################################
     def get_element_membership(self, element: object) -> list:
@@ -161,7 +190,9 @@ class LifeCycle(object):
         return memberships
 
     ############################## Flow methods ##########################################
-    def get_set_flow(self, target: str, direction: str, min_branch_size: int = 1) -> dict:
+    def get_set_flow(
+        self, target: str, direction: str, min_branch_size: int = 1
+    ) -> dict:
         """
         compute the flow of a set w.r.t. a given temporal direction. The flow of a set is the collection of sets that
         contain at least one element of the target set, Returns a dictionary keyed by set name and valued by the
@@ -173,10 +204,10 @@ class LifeCycle(object):
         :return: a dictionary keyed by set name and valued by the intersection of the target set and the set
         """
         flow = dict()
-        tid = int(target.split('_')[0])
-        if direction == '+':
+        tid = int(target.split("_")[0])
+        if direction == "+":
             ref_tid = tid + 1
-        elif direction == '-':
+        elif direction == "-":
             ref_tid = tid - 1
         else:
             raise ValueError("direction must either be + or -")
@@ -199,7 +230,9 @@ class LifeCycle(object):
         """
         all_flows = dict()
         for name in self.named_sets:
-            all_flows[name] = self.get_set_flow(name, direction, min_branch_size=min_branch_size)
+            all_flows[name] = self.get_set_flow(
+                name, direction, min_branch_size=min_branch_size
+            )
 
         return all_flows
 
@@ -230,28 +263,27 @@ class LifeCycle(object):
         """
 
         known_types = {
-            'int': int,
-            'float': float,
-            'str': str,
-            'bool': bool,
-            'list': list,
-            'set': set,
-            'dict': dict
+            "int": int,
+            "float": float,
+            "str": str,
+            "bool": bool,
+            "list": list,
+            "set": set,
+            "dict": dict,
         }
 
         with open(path, "rt") as f:
             ds = json.loads(f.read())
 
-        self.dtype = known_types[ds['dtype']]
-        for name, set_ in ds['named_sets'].items():
+        self.dtype = known_types[ds["dtype"]]
+        for name, set_ in ds["named_sets"].items():
             self.named_sets[name] = set(set_)
-            self.tid_to_named_sets[int(name.split('_')[0])] = name
+            self.tid_to_named_sets[int(name.split("_")[0])] = name
 
-        self.to_int_mapping = {int(k): v for k, v in ds['mapping'].items()}
+        self.to_int_mapping = {int(k): v for k, v in ds["mapping"].items()}
         self.tids = [int(i) for i in self.tid_to_named_sets.keys()]
-        self.named_sets = {k: set(v) for k, v in ds['named_sets'].items()}
-        self.to_int_mapping = {int(k): v for k, v in ds['mapping'].items()}
-
+        self.named_sets = {k: set(v) for k, v in ds["named_sets"].items()}
+        self.to_int_mapping = {int(k): v for k, v in ds["mapping"].items()}
 
     def to_dict(self) -> dict:
         """
@@ -264,9 +296,9 @@ class LifeCycle(object):
     def __dict__(self):
 
         return {
-            'dtype': str(self.dtype).split("'")[1],
-            'named_sets': self.named_sets,
-            'mapping': self.to_int_mapping
+            "dtype": str(self.dtype).split("'")[1],
+            "named_sets": self.named_sets,
+            "mapping": self.to_int_mapping,
         }
 
     def __eq__(self, other):
