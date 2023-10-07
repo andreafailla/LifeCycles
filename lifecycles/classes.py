@@ -256,7 +256,9 @@ class LifeCycle(object):
 
     def read_json(self, path: str) -> None:
         """
-        load the LifeCycle from a json file
+        load the LifeCycle from a json file.
+        If the dtype declared at instantiation differs from the one in the json file, the former will be overwritten by
+        the latter.
 
         :param path: the path to the json file
         :return:

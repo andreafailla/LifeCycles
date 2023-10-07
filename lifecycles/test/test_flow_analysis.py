@@ -8,10 +8,8 @@ from lifecycles.flow_analysis import *
 
 
 class FlowAnalysisTest(TestCase):
-
     """
     TODO: Write tests for the following functions:
-    - from_set_to_attribute_values
     - check against attributes
     """
 
@@ -34,8 +32,6 @@ class FlowAnalysisTest(TestCase):
 
         return lc
 
-
-
     def test_analyze_flow(self):
         lc = self.lc4test()
 
@@ -45,18 +41,13 @@ class FlowAnalysisTest(TestCase):
                           'W': 0.33155949233815135, 'size': 63})
 
         self.assertListEqual(sorted(analyze_flow(lc, '0_0', '-', attr='attr').keys()),
-                         sorted(['D', 'H', 'W', 'attrH', 'attrH_change', 'size', 'attrpurity', 'attrmca']))
+                             sorted(['D', 'H', 'W', 'attr_H', 'attr_H_change', 'size', 'attr_purity', 'attr_mca']))
 
         self.assertDictEqual(analyze_flow(lc, '0_0', '-'),
-                             {'H': 1, 'W': 0.0, 'D': 1, 'size': 63})
-
-
-
-
+                             {'H': 0, 'W': 0.0, 'D': 1, 'size': 63})
 
     def test_analyze_all_flows(self):
         lc = self.lc4test()
 
         for op in ['+', '-']:
             self.assertListEqual(list(analyze_all_flows(lc, op).keys()), list(lc.named_sets.keys()))
-

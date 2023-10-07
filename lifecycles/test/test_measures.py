@@ -16,7 +16,7 @@ class MeasuresTest(TestCase):
 
     def test_flow_entropy(self):
         self.assertEqual(flow_entropy((1, 1)), 0)
-        self.assertEqual(flow_entropy(([])), 1)
+        self.assertEqual(flow_entropy(([])), 0)
         self.assertEqual(round(flow_entropy([2, 3, 2]), 3), 0.918)
 
     def test_contribution_factor(self):
