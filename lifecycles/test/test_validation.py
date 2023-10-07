@@ -17,7 +17,12 @@ class ValidationTest(TestCase):
         data = self.get_data()
         lc = LifeCycle(int)
         lc.add_partitions_from(data)
+        for direction in ['+', '-']:
+            self.assertListEqual(
+                list(all_validated_flows(lc, direction=direction).keys()),
+                lc.set_ids()
+            )
         self.assertListEqual(
             list(all_validated_flows(lc, direction='-').keys()),
-            list(lc.named_sets.keys())
+            lc.set_ids()
         )
