@@ -22,7 +22,7 @@ def _color_links(links, color):
     return res
 
 
-def _make_sankey(links, all_labels, color, title):
+def _make_sankey(links, color, title):
     links["color"] = _color_links(links, color=color)
     fig = go.Figure(
         data=[
@@ -190,7 +190,7 @@ def plot_set_flow(
     links = pd.DataFrame(links, columns=["source", "target", "value"])
     links = _values_to_idx(links, all_labels)
 
-    _make_sankey(links, all_labels, color=color, title=title)
+    _make_sankey(links, color=color, title=title)
 
 
 def plot_event_radar(

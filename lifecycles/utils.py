@@ -28,6 +28,7 @@ def forward_event_names():
 
 
 def colormap():
+    """
     return {
         "Birth": "tab:olive",
         "Accumulation": "tab:gray",
@@ -43,6 +44,24 @@ def colormap():
         "Reduction": "tab:purple",
         "Split": "tab:red",
         "Ancestor": "tab:blue",
+        "Disassemble": "tab:orange",
+    }
+    """
+    return {
+        "Birth": "tab:olive",
+        "Accumulation": "#4CC89F",
+        "Growth": "#929292",
+        "Expansion": "#5C5C5C",
+        "Continue": "#CFBAE1",
+        "Merge": "#E34856",
+        "Offspring": "#0DAAE9",
+        "Reorganization": "tab:orange",
+        "Death": "tab:olive",
+        "Dispersion": "#4CC89F",
+        "Shrink": "#929292",
+        "Reduction": "#5C5C5C",
+        "Split": "#E34856",
+        "Ancestor": "#0DAAE9",
         "Disassemble": "tab:orange",
     }
 
