@@ -56,7 +56,7 @@ def _make_sankey(links, color, title):
     fig.show()
 
 
-def _make_radar(values, categories, title="", color="green", ax=None):
+def _make_radar(values, categories, rescale, title="", color="green", ax=None):
     pi = 3.14159
     # number of variables
     N = len(categories)
@@ -106,7 +106,7 @@ def _make_radar(values, categories, title="", color="green", ax=None):
             ha=label.get_ha(),
             va=label.get_va(),
             color="grey",
-            size=8,
+            size=11,
             fontdict={"variant": "small-caps"},
         )
         lab.set_rotation(angle)
@@ -116,8 +116,10 @@ def _make_radar(values, categories, title="", color="green", ax=None):
     ax.plot(angles, values, color=color, linewidth=1.5, linestyle="solid")
 
     ax.fill(angles, values, color="red", alpha=0.0)
-
-    ax.set_rmax(1)
+    if rescale:
+        ax.set_rmax(max(values) + 0.1)
+    else:
+        ax.set_rmax(1)
     ax.set_rmin(0)
     if title != "":
         ax.set_title(title + "\n\n")
@@ -194,7 +196,7 @@ def plot_set_flow(
 
 
 def plot_event_radar(
-    lc, set_name, direction, min_branch_size=1, color="green", ax=None
+    lc, set_name, direction, min_branch_size=1, rescale=True, color="green", ax=None
 ):
     data = analyze_flow(
         lc, set_name, direction=direction, min_branch_size=min_branch_size
@@ -204,6 +206,7 @@ def plot_event_radar(
     return _make_radar(
         list(weights[set_name].values()),
         list(weights[set_name].keys()),
+        rescale=rescale,
         color=color,
         ax=ax,
     )
