@@ -11,7 +11,6 @@ class LifeCycle(object):
     def __init__(self, dtype: type = int) -> None:
 
         self.dtype = dtype
-        self.to_int_mapping = dict()  # mapping to int if needed
 
         self.tids = []
         self.named_sets = defaultdict(set)
@@ -282,10 +281,9 @@ class LifeCycle(object):
             self.named_sets[name] = set(set_)
             self.tid_to_named_sets[int(name.split("_")[0])] = name
 
-        self.to_int_mapping = {int(k): v for k, v in ds["mapping"].items()}
         self.tids = [int(i) for i in self.tid_to_named_sets.keys()]
         self.named_sets = {k: set(v) for k, v in ds["named_sets"].items()}
-        self.to_int_mapping = {int(k): v for k, v in ds["mapping"].items()}
+        print("Loaded LifeCycle from", path)
 
     def to_dict(self) -> dict:
         """
@@ -300,7 +298,6 @@ class LifeCycle(object):
         return {
             "dtype": str(self.dtype).split("'")[1],
             "named_sets": self.named_sets,
-            "mapping": self.to_int_mapping,
         }
 
     def __eq__(self, other):
