@@ -1,7 +1,6 @@
 import math
 import random
 from collections import Counter, defaultdict
-
 from statistics import mean, stdev
 
 from lifecycles.classes import LifeCycle
@@ -24,9 +23,14 @@ def _null_model(branch, reference, num_permutations):
 
     avg_null_branch = defaultdict(dict)
     for name, frequencies in null_branch.items():
-        avg_null_branch[name]["mean"] = mean(frequencies)
-        avg_null_branch[name]["std"] = stdev(frequencies)
-    return avg_null_branch
+        if len(frequencies) == 1:
+            avg_null_branch[name]["mean"] = frequencies[0]
+            avg_null_branch[name]["std"] = 0
+        else:
+            avg_null_branch[name]["mean"] = mean(frequencies)
+            avg_null_branch[name]["std"] = stdev(frequencies)
+
+    return dict(avg_null_branch)
 
 
 def _is_significant(size, null_model, significance_level):

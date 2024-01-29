@@ -1,5 +1,5 @@
-from lifecycles.measures import *
 from lifecycles.classes import LifeCycle
+from lifecycles.measures import *
 from lifecycles.utils import (
     backward_event_names,
     forward_event_names,

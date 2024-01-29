@@ -1,7 +1,6 @@
+import os
 import pickle
 import random
-import os
-
 from collections import defaultdict
 from unittest import TestCase
 
@@ -285,9 +284,7 @@ class LifeCyclesTest(TestCase):
 
         lc.add_partitions_from(data)
 
-        self.assertEqual(
-            sorted(list(lc.to_dict().keys())), ["dtype", "mapping", "named_sets"]
-        )
+        self.assertEqual(sorted(list(lc.to_dict().keys())), ["dtype", "named_sets"])
 
         file_path = "test.json"
         lc.write_json(file_path)

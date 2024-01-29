@@ -80,7 +80,7 @@ def contribution_factor(target: set, reference: list):
     return w
 
 
-def difference_factor(target: set, reference: list):
+def difference_factor(target: set, reference: list) -> float:
     """
     the difference factor is the ratio of the number of elements
     in the target set that are not in any of the reference sets
@@ -92,15 +92,17 @@ def difference_factor(target: set, reference: list):
     try:
         return len(target.difference(set.union(*reference))) / len(target)
     except TypeError:  # if reference is empty
-        return 1
+        return 1.0
 
 
-def attribute_entropy_change(target_labels, reference_labels, base=None):
+def attribute_entropy_change(
+    target_labels: list, reference_labels: list, base: int = None
+) -> float:
     """
     compute the change in attribute entropy between a target set and a reference set
 
     :param target_labels: the labels of the target set
-    :param reference_labels: the labels of the reference sets
+    :param reference_labels: the labels of the reference sets (a list of lists)
     :param base: the base of the logarithm
     :return: the change in attribute entropy
     """
@@ -128,7 +130,7 @@ def purity(labels: list) -> tuple:
     """
     compute the purity of a set of labels. Purity is defined as the relative frequency of the most frequent attribute value
 
-    :param labels:
+    :param labels: the list of labels
     :return: a tuple of the most frequent attribute value and its frequency
     """
     most_common_attribute, freq = Counter(labels).most_common(1)[0]

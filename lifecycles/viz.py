@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
+
 from lifecycles.flow_analysis import analyze_flow, event_weights
 
 
