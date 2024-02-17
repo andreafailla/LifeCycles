@@ -66,7 +66,7 @@ def colormap():
     }
 
 
-def from_set_to_attribute_values(lc: LifeCycle, target: str, attr_name: str) -> list:
+def get_set_attribute_values(lc: LifeCycle, target: str, attr_name: str) -> list:
     """
     retrieve the list of attributes of the elements in a set
 

@@ -3,7 +3,7 @@ from lifecycles.measures import *
 from lifecycles.utils import (
     backward_event_names,
     forward_event_names,
-    from_set_to_attribute_values,
+    get_set_attribute_values,
 )
 
 __all__ = [
@@ -73,10 +73,8 @@ def analyze_flow(
     if attr is not None:
         attrs_to_analyze = [attr] if isinstance(attr, str) else attr
         for a in attrs_to_analyze:
-            target_attrs = from_set_to_attribute_values(lc, target, a)
-            reference_attrs = [
-                from_set_to_attribute_values(lc, name, a) for name in flow
-            ]
+            target_attrs = get_set_attribute_values(lc, target, a)
+            reference_attrs = [get_set_attribute_values(lc, name, a) for name in flow]
             analysis.update(_analyze_one_attr(target_attrs, reference_attrs, a))
     return analysis
 
