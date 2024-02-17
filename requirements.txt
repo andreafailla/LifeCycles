@@ -3,3 +3,4 @@ pandas
 plotly
 seaborn
 numpy
+scipy

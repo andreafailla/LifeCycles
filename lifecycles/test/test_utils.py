@@ -1,9 +1,6 @@
-import pickle
-import random
 from collections import defaultdict
 from unittest import TestCase
 
-from lifecycles import LifeCycle
 from lifecycles.utils import *
 
 
@@ -19,5 +16,5 @@ class UtilsTest(TestCase):
                 for element in set_:
                     attrs[element][tid] = "VALUE"
         lc.set_attributes(attrs, attr_name="attr")
-        res = from_set_to_attribute_values(lc, "0_0", "attr")
+        res = get_set_attribute_values(lc, "0_0", "attr")
         self.assertListEqual(res, ["VALUE", "VALUE", "VALUE"])
