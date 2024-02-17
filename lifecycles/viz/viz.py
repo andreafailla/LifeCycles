@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from lifecycles.flow_analysis import analyze_flow, event_weights
+from lifecycles.algorithms.flow_analysis import analyze_flow, event_weights
 
 
 def _values_to_idx(links, all_labels):

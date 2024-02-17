@@ -1,8 +1,8 @@
 import pickle
 from unittest import TestCase
 
-from lifecycles.classes import LifeCycle
-from lifecycles.validation import validate_all_flows
+from lifecycles.classes.classes import LifeCycle
+from lifecycles.validation.validation import validate_all_flows
 
 
 class ValidationTest(TestCase):

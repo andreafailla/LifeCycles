@@ -4,7 +4,7 @@ from statistics import mean, stdev
 
 import scipy.stats as stats
 
-from lifecycles.classes import LifeCycle
+from lifecycles.classes.classes import LifeCycle
 
 
 def _generate_random_branch(reference, size):

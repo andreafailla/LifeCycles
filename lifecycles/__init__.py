@@ -1,5 +1,5 @@
-from lifecycles.classes import LifeCycle
-from lifecycles.flow_analysis import analyze_flow, analyze_all_flows, event_weights
-from lifecycles.validation import validated_flow, all_validated_flows
-from lifecycles.viz import *
-from lifecycles.utils import *
+from lifecycles.algorithms.flow_analysis import *
+from lifecycles.classes.classes import *
+from lifecycles.utils.utils import *
+from lifecycles.validation.validation import *
+from lifecycles.viz.viz import *

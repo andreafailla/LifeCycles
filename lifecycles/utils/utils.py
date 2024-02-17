@@ -1,6 +1,3 @@
-from lifecycles import LifeCycle
-
-
 def backward_event_names():
     return [
         "Birth",
@@ -66,7 +63,7 @@ def colormap():
     }
 
 
-def get_set_attribute_values(lc: LifeCycle, target: str, attr_name: str) -> list:
+def get_set_attribute_values(lc: object, target: str, attr_name: str) -> list:
     """
     retrieve the list of attributes of the elements in a set
 

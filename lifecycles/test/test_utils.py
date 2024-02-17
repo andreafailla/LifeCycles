@@ -1,7 +1,8 @@
 from collections import defaultdict
 from unittest import TestCase
 
-from lifecycles.utils import *
+from lifecycles.classes.classes import LifeCycle
+from lifecycles.utils.utils import *
 
 
 class UtilsTest(TestCase):

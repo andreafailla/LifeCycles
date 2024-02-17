@@ -1,10 +1,9 @@
 from unittest import TestCase
 
-from lifecycles.measures import *
+from lifecycles.algorithms.measures import *
 
 
 class MeasuresTest(TestCase):
-
     def test_normalized_shannon_entropy(self):
         with self.assertRaises(ZeroDivisionError):
             e = normalized_shannon_entropy((1, 1), base=2)

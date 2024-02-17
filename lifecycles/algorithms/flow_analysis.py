@@ -1,10 +1,6 @@
-from lifecycles.classes import LifeCycle
-from lifecycles.measures import *
-from lifecycles.utils import (
-    backward_event_names,
-    forward_event_names,
-    get_set_attribute_values,
-)
+from lifecycles.algorithms.measures import *
+from lifecycles.classes.classes import LifeCycle
+from lifecycles.utils.utils import *
 
 __all__ = [
     "analyze_all_flows",
