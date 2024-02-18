@@ -6,6 +6,14 @@ class LifeCycle(object):
     """
     A class to represent and analyze temporally-evolving sets.
 
+    :param dtype: the datatype of the elements in the sets.
+    Supported types are int, float, str, list, and dict.
+
+    :return: a LifeCycle object
+
+    :Example:
+    >>> lc = LifeCycle(dtype=int) # accepts int elements
+    >>> lc = LifeCycle(dtype=str) # accepts str elements
     """
 
     def __init__(self, dtype: type = int) -> None:
@@ -20,11 +28,17 @@ class LifeCycle(object):
     ############################## Convenience get methods ##########################################
     def temporal_ids(self) -> list:
         """
-        retrieve the temporal ids of the LyfeCycle.
-        Temporal ids are integers that represent the observation time of a partition.
-
+        retrieve the temporal ids of the LifeCycle.
+        Temporal ids are positive integers that represent the observation time of a partition.
 
         :return: a list of temporal ids
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([{"a", "b"}, {"c", "d"}]) # at time 0
+        >>> lc.add_partition([{"a", "b"}, {"c"}]) # at time 1
+        >>> lc.temporal_ids()
+        [0, 1]
         """
         return self.tids
 
@@ -34,6 +48,14 @@ class LifeCycle(object):
         The universe set is the union of all sets in the LifeCycle
 
         :return: the universe set
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]]) # at time 0
+        >>> lc.add_partition([{5,7}, {6,8}]) # at time 1
+        >>> lc.universe_set()
+        {1, 2, 3, 4, 5, 6, 7, 8}
+
         """
         universe = set()
         for set_ in self.named_sets.values():
@@ -42,10 +64,17 @@ class LifeCycle(object):
 
     def set_ids(self) -> list:
         """
-        retrieve the temporal ids of the lifecycle. Each id is of the form 'tid_sid' where tid is the temporal id and
+        retrieve the set ids of the lifecycle. Each id is of the form 'tid_sid' where tid is the temporal id and
         sid is the set id. The set id is a unique identifier of the set within the temporal id.
 
         :return: a list of ids of the temporal sets
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([{5,7}, {6,8}])
+        >>> lc.set_ids()
+        ['0_0', '0_1', '1_0', '1_1']
         """
         return list(self.named_sets.keys())
 
@@ -57,7 +86,12 @@ class LifeCycle(object):
         partition will be assigned a unique name
 
         :param partition: a collection of sets
-        :return
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([{5,7}, {6,8}])
         """
         tid = len(self.tids)
         self.tids.append(tid)
@@ -90,8 +124,16 @@ class LifeCycle(object):
         """
         add multiple partitions to the LifeCycle.
 
-        :param partitions:
-        :return:
+        :param partitions: a list of partitions
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> partitions = [
+        >>>     [[1,2], [3,4,5]],
+        >>>     [{5,7}, {6,8}]
+        >>> ]
+        >>> lc.add_partitions_from(partitions)
         """
         for p in partitions:
             self.add_partition(p)
@@ -102,6 +144,15 @@ class LifeCycle(object):
 
         :param tid: the id of the partition to retrieve
         :return: the partition corresponding to the given id
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([{5,7}, {6,8}, {9}])
+        >>> lc.get_partition_at(0)
+        ['0_0', '0_1']
+        >>> lc.get_partition_at(1)
+        ['1_0', '1_1', '1_2']
         """
         return self.tid_to_named_sets[str(tid)]
 
@@ -109,23 +160,50 @@ class LifeCycle(object):
     def set_attributes(self, attributes: dict, attr_name: str) -> None:
         """
         set the temporal attributes of the elements in the LifeCycle
+
         The temporal attributes must be provided as a dictionary keyed by the element id and valued by a dictionary
         keyed by the temporal id and valued by the attribute value.
 
         :param attr_name: the name of the attribute
         :param attributes: a dictionary of temporal attributes
-        :return:
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> attributes = {
+        >>>     1: {0: 'red', 1: 'blue'}, # element 1 is red at time 0 and blue at time 1
+        >>>     2: {0: 'green', 1: 'magenta'} # element 2 is green at time 0 and magenta at time 1
+        >>> }
+        >>> lc.set_attributes(attributes, attr_name="color")
         """
         self.attributes[attr_name] = attributes
 
-    def get_attributes(self, attr_name, of=None) -> dict:
+    def get_attributes(self, attr_name: str, of: object = None) -> dict:
         """
         retrieve the temporal attributes of the LifeCycle
 
         :param attr_name: the name of the attribute
         :param of: the element for which to retrieve the attributes. If None, all attributes are returned
+
         :return: a dictionary keyed by element id and valued by a dictionary keyed by temporal id and valued by the
         attribute value
+
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> attributes = {
+        >>>     1: {0: 'red', 1: 'blue'}, # element 1 is red at time 0 and blue at time 1
+        >>>     2: {0: 'green', 1: 'magenta'} # element 2 is green at time 0 and magenta at time 1
+        >>> }
+        >>> lc.set_attributes(attributes, attr_name="color")
+        >>> lc.get_attributes("color")
+        {1: {0: 'red', 1: 'blue'}, 2: {0: 'green', 1: 'magenta'}}
+        >>> lc.get_attributes("color", of=1) # get the attributes of element 1
+        {0: 'red', 1: 'blue'}
         """
         if of is None:
             return self.attributes[attr_name]
@@ -139,8 +217,54 @@ class LifeCycle(object):
 
         :param set_id: the name of the set to retrieve
         :return: the set corresponding to the given name
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.get_set("0_0")
+        {1, 2}
         """
         return self.named_sets[set_id]
+
+    def set_iterator(self, tid: int = None) -> iter:
+        """
+        returns an iterator over the sets of the LifeCycle.
+        if a temporal id is provided, it will iterate over the sets observed at that time instant
+
+        :param tid: the temporal id of the sets to iterate over. Default is None
+        :return: an iterator over the sets
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> for set_ in lc.set_iterator():
+        >>>     print(set_)
+        {1, 2}
+        {3, 4, 5}
+        {1, 2, 3}
+        {4, 5}
+        """
+        if tid is None:
+            yield from self.named_sets.values()
+        else:
+            for name in self.get_partition_at(tid):
+                yield self.named_sets[name]
+
+    def get_all_sets(self) -> list:
+        """
+        retrieve all sets in the LifeCycle
+
+        :return: a list of sets
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.get_all_sets()
+        [{1, 2}, {3, 4, 5}, {1, 2, 3}, {4, 5}]
+        """
+        return list(self.named_sets.values())
 
     def filter_on_set_size(self, min_size: int = 1, max_size: int = None) -> None:
         """
@@ -148,7 +272,15 @@ class LifeCycle(object):
 
         :param min_size: the minimum size of the sets to keep
         :param max_size: the maximum size of the sets to keep
-        :return:
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.filter_on_set_size(min_size=3) # remove sets with less than 3 elements
+        >>> lc.set_ids() # only sets 1_0 and 1_1 remain
+        ['0_1', '1_0']
         """
 
         if max_size is None:
@@ -163,8 +295,16 @@ class LifeCycle(object):
     def get_element_membership(self, element: object) -> list:
         """
         retrieve the list of sets that contain a given element
+
         :param element: the element for which to retrieve the memberships
         :return: a list of set names that contain the given element
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.get_element_membership(1)
+        ['0_0', '1_0']
         """
 
         memberships = list()
@@ -176,7 +316,13 @@ class LifeCycle(object):
     def get_all_element_memberships(self) -> dict:
         """
         retrieve the list of sets that contain each element in the LifeCycle
-        :return:
+        :return: a dictionary keyed by element and valued by a list of set names that contain the element
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.get_all_element_memberships()
         """
 
         memberships = defaultdict(list)
@@ -241,7 +387,13 @@ class LifeCycle(object):
         save the LifeCycle to a json file
 
         :param path: the path to the json file
-        :return:
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.write_json("lc.json")
         """
 
         dic = dict()
@@ -260,7 +412,10 @@ class LifeCycle(object):
         the latter.
 
         :param path: the path to the json file
-        :return:
+        :return: None
+
+        :Example:
+        >>> lc = LifeCycle().read_json('lc.json')
         """
 
         known_types = {
@@ -290,6 +445,13 @@ class LifeCycle(object):
         convert the LifeCycle to a dictionary
 
         :return: a dictionary representation of the LifeCycle
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.to_dict()
+        {'dtype': 'int', 'named_sets': {'0_0': {1, 2}, '0_1': {3, 4, 5}, '1_0': {1, 2, 3}, '1_1': {4, 5}}}
         """
         return self.__dict__()
 

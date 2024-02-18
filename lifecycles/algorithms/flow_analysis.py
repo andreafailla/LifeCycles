@@ -54,6 +54,7 @@ def analyze_flow(
     the entropy change, the purity and the most common attribute value.
     In case min_branch_size is specified, all branches of the flow that include less than min_branch_size elements are
     discarded.
+
     :param lc:  a LifeCycle object
     :param target:  the name of the set to analyze
     :param direction:  the temporal direction in which the set is to be analyzed
@@ -81,6 +82,7 @@ def analyze_all_flows(
     """
     Analyze the flow of all sets in a LifeCycle object w.r.t. a given temporal direction.
     See analyze_flow for more details
+
     :param lc: a LifeCycle object
     :param direction: the temporal direction in which the sets are to be analyzed
     :param min_branch_size: the minimum number of elements that a branch must contain to be considered
