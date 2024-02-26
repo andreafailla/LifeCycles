@@ -28,6 +28,22 @@ class LifeCycle(object):
         """
         return self.tids
 
+    def slice(self, start: int, end: int) -> None:
+        """
+        Slice the LifeCycle to keep only a given interval
+
+        Args:
+            tid (int,int): the interval to keep
+        """
+        temp = LifeCycle(self.dtype)
+        temp.tids = self.tids[start:end]
+        temp.named_sets = {k:v for k,v in self.named_sets.items() if int(k.split("_")[0]) in temp.tids}
+        temp.tid_to_named_sets = {k:v for k,v in self.tid_to_named_sets.items() if int(k) in temp.tids}
+        temp.attributes = {k:v for k,v in self.attributes.items() if int(k) in temp.tids}
+        return temp
+        
+        
+        
     def universe_set(self) -> set:
         """
         retrieve the universe set.
@@ -40,7 +56,7 @@ class LifeCycle(object):
             universe = universe.union(set_)
         return universe
 
-    def set_ids(self) -> list:
+    def groups_ids(self) -> list:
         """
         retrieve the temporal ids of the lifecycle. Each id is of the form 'tid_sid' where tid is the temporal id and
         sid is the set id. The set id is a unique identifier of the set within the temporal id.
@@ -103,6 +119,8 @@ class LifeCycle(object):
         :param tid: the id of the partition to retrieve
         :return: the partition corresponding to the given id
         """
+        if str(tid) not in self.tid_to_named_sets:
+            return []
         return self.tid_to_named_sets[str(tid)]
 
     ############################## Attribute methods ##########################################
@@ -133,7 +151,7 @@ class LifeCycle(object):
             return self.attributes[attr_name][of]
 
     ############################## Set methods ##########################################
-    def get_set(self, set_id: str) -> set:
+    def get_group(self, set_id: str) -> set:
         """
         retrieve a set by id
 
@@ -189,7 +207,7 @@ class LifeCycle(object):
         return memberships
 
     ############################## Flow methods ##########################################
-    def get_set_flow(
+    def group_flow(
         self, target: str, direction: str, min_branch_size: int = 1
     ) -> dict:
         """
@@ -211,10 +229,10 @@ class LifeCycle(object):
         else:
             raise ValueError("direction must either be + or -")
         reference = self.get_partition_at(ref_tid)
-        target_set = self.get_set(target)
+        target_set = self.get_group(target)
 
         for name in reference:
-            set_ = self.get_set(name)
+            set_ = self.get_group(name)
             branch = target_set.intersection(set_)
             if len(branch) >= min_branch_size:
                 flow[name] = branch
@@ -229,7 +247,7 @@ class LifeCycle(object):
         """
         all_flows = dict()
         for name in self.named_sets:
-            all_flows[name] = self.get_set_flow(
+            all_flows[name] = self.group_flow(
                 name, direction, min_branch_size=min_branch_size
             )
 

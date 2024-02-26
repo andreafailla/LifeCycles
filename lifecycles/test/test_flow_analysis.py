@@ -25,7 +25,7 @@ class FlowAnalysisTest(TestCase):
         for tid in lc.temporal_ids():
             partition = lc.get_partition_at(tid)
             for set_id in partition:
-                set_ = lc.get_set(set_id)
+                set_ = lc.get_group(set_id)
                 for element in set_:
                     attrs[element][tid] = random.choice(['A', 'B', 'C', 'D', 'E'])
         lc.set_attributes(attrs, attr_name='attr')

@@ -79,6 +79,6 @@ def from_set_to_attribute_values(lc: LifeCycle, target: str, attr_name: str) -> 
     tid = int(target.split("_")[0])
     attributes = list()
 
-    for elem in lc.get_set(target):
+    for elem in lc.get_group(target):
         attributes.append(lc.get_attributes(attr_name, of=elem)[tid])
     return attributes

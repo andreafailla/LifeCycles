@@ -20,9 +20,9 @@ class ValidationTest(TestCase):
         for direction in ['+', '-']:
             self.assertListEqual(
                 list(all_validated_flows(lc, direction=direction).keys()),
-                lc.set_ids()
+                lc.groups_ids()
             )
         self.assertListEqual(
             list(all_validated_flows(lc, direction='-').keys()),
-            lc.set_ids()
+            lc.groups_ids()
         )

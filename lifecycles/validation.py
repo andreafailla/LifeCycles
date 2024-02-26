@@ -67,7 +67,7 @@ def validated_flow(
     :return: a dictionary keyed by set name and valued by the nodes in the validated flow
     """
 
-    flow = lc.get_set_flow(target, direction, min_branch_size)
+    flow = lc.group_flow(target, direction, min_branch_size)
     tid = int(target.split("_")[0])
     if direction == "+":
         tid = tid + 1
@@ -75,7 +75,7 @@ def validated_flow(
         tid = tid - 1
     else:
         raise ValueError(f"Invalid direction: {direction}")
-    reference = [[id_] * len(lc.get_set(id_)) for id_ in lc.get_partition_at(tid)]
+    reference = [[id_] * len(lc.get_group(id_)) for id_ in lc.get_partition_at(tid)]
 
     validated = dict()
     for name, subset in flow.items():
