@@ -48,21 +48,21 @@ def colormap():
     }
     """
     return {
-        "Birth": "tab:olive",
+        "Birth": " #808000",
         "Accumulation": "#4CC89F",
         "Growth": "#929292",
         "Expansion": "#5C5C5C",
         "Continue": "#CFBAE1",
         "Merge": "#E34856",
         "Offspring": "#0DAAE9",
-        "Reorganization": "tab:orange",
-        "Death": "tab:olive",
+        "Reorganization": "#FFA500",
+        "Death": " #808000",
         "Dispersion": "#4CC89F",
         "Shrink": "#929292",
         "Reduction": "#5C5C5C",
         "Split": "#E34856",
         "Ancestor": "#0DAAE9",
-        "Disassemble": "tab:orange",
+        "Disassemble": "#FFA500",
     }
 
 

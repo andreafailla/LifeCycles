@@ -364,6 +364,7 @@ def specificity_distribution(lc, direction,width=800, height=500,showlegend=True
     #using plotly, create an histogram with stacked bars by event type
     #create stacked hsitogram every 0.1
     fig = go.Figure()
+
     for event in df["event"].unique():
         fig.add_trace(go.Histogram(x=df[df["event"]==event]["typicality"], name=event, opacity=0.75, xbins=dict(start=0,end=1.1,size=0.1)))
         
@@ -373,9 +374,12 @@ def specificity_distribution(lc, direction,width=800, height=500,showlegend=True
     for category in possible_values:
         if category not in categories_present:
             fig.add_trace(go.Histogram(x=[None], name=category, opacity=0.75, xbins=dict(start=0,end=1.1,size=0.1),showlegend=True))  # Empty histogram trace
-
     fig.update_layout(showlegend=showlegend)
     fig.update_layout(barmode='stack')
+    #set colors
+    #fig.update_traces(marker_color=colors)
+    for trace in fig.data:
+        trace.marker.color = utils.colormap()[trace.name]
     
     fig.update_xaxes(range=[0, 1.01], tickvals=np.arange(0,1.01,0.1))
     #set figure size
