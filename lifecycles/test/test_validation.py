@@ -19,8 +19,9 @@ class ValidationTest(TestCase):
         lc.add_partitions_from(data)
         for direction in ["+", "-"]:
             self.assertListEqual(
-                list(validate_all_flows(lc, direction=direction).keys()), lc.set_ids()
+                list(validate_all_flows(lc, direction=direction).keys()),
+                lc.groups_ids(),
             )
         self.assertListEqual(
-            list(validate_all_flows(lc, direction="-").keys()), lc.set_ids()
+            list(validate_all_flows(lc, direction="-").keys()), lc.groups_ids()
         )

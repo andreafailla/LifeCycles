@@ -8,10 +8,6 @@ from lifecycles import LifeCycle
 
 
 class LifeCyclesTest(TestCase):
-    """
-    TODO: To be checked with other element's data types
-    """
-
     @staticmethod
     def get_data():
         with open("testbed.pkl", "rb") as f:
@@ -25,7 +21,7 @@ class LifeCyclesTest(TestCase):
         for tid in lc.temporal_ids():
             partition = lc.get_partition_at(tid)
             for set_id in partition:
-                set_ = lc.get_set(set_id)
+                set_ = lc.get_group(set_id)
                 for element in set_:
                     attrs[element][tid] = random.choice(["A", "B", "C", "D", "E"])
         return attrs
@@ -40,7 +36,7 @@ class LifeCyclesTest(TestCase):
             ["0_0", "0_1", "0_2", "0_3", "0_4", "0_5", "0_6", "0_7"],
         )
         self.assertEqual(
-            lc.get_set("0_0"),
+            lc.get_group("0_0"),
             {
                 93,
                 116,
@@ -111,19 +107,32 @@ class LifeCyclesTest(TestCase):
         lc.add_partitions_from(partitions[1:])
         self.assertEqual(lc.temporal_ids(), [0, 1, 2, 3, 4])
         self.assertEqual(len(lc.universe_set()), 2052)
-        self.assertEqual(len(lc.set_ids()), len(lc.named_sets))
+        self.assertEqual(len(lc.groups_ids()), len(lc.named_sets))
 
         self.assertEqual(len(lc.get_partition_at(0)), len(partitions[0]))
 
-    def test_filter_on_set_size(self):
+    def test_slice(self):
+        partitions = self.get_data()
+        lc = LifeCycle(int)
+        lc.add_partitions_from(partitions)
+
+        lc2 = lc.slice(0, 2)
+        self.assertEqual(lc2.temporal_ids(), [0, 1])
+        self.assertEqual(len(lc2.universe_set()), 939)
+        self.assertEqual(len(lc2.groups_ids()), len(lc2.named_sets))
+
+        self.assertEqual(len(lc2.get_partition_at(0)), len(partitions[0]))
+        self.assertEqual(len(lc2.get_partition_at(1)), len(partitions[1]))
+
+    def test_filter_on_group_size(self):
         data = self.get_data()
         lc = LifeCycle(int)
         lc.add_partitions_from(data)
-        self.assertEqual(len(lc.set_ids()), 45)
-        lc.filter_on_set_size(min_size=40)
-        self.assertEqual(len(lc.set_ids()), 25)
-        lc.filter_on_set_size(max_size=100)
-        self.assertEqual(len(lc.set_ids()), 15)
+        self.assertEqual(len(lc.groups_ids()), 45)
+        lc.filter_on_group_size(min_size=40)
+        self.assertEqual(len(lc.groups_ids()), 25)
+        lc.filter_on_group_size(max_size=100)
+        self.assertEqual(len(lc.groups_ids()), 15)
 
     def test_membership(self):
         partitions = self.get_data()
@@ -162,7 +171,7 @@ class LifeCyclesTest(TestCase):
         lc = LifeCycle(int)
         lc.add_partitions_from(data)
 
-        flow = lc.get_set_flow("0_0", "+")
+        flow = lc.group_flow("0_0", "+")
         self.assertEqual(
             flow,
             {
@@ -211,7 +220,7 @@ class LifeCyclesTest(TestCase):
             },
         )
 
-        flow = lc.get_set_flow("1_0", "-")
+        flow = lc.group_flow("1_0", "-")
         self.assertEqual(
             flow,
             {
@@ -266,7 +275,7 @@ class LifeCyclesTest(TestCase):
         lc.add_partitions_from(data)
 
         for min_branch_size in range(1, 10):
-            flow = lc.get_set_flow("0_0", "+", min_branch_size=min_branch_size)
+            flow = lc.group_flow("0_0", "+", min_branch_size=min_branch_size)
             for set_id, elements in flow.items():
                 self.assertGreaterEqual(len(elements), min_branch_size)
 
@@ -274,8 +283,8 @@ class LifeCyclesTest(TestCase):
         lc = LifeCycle(str)
         lc.add_partition([["a", "b", "c"], ["d", "e", "f"]])
         self.assertEqual(lc.get_partition_at(0), ["0_0", "0_1"])
-        self.assertEqual(lc.get_set("0_0"), {"a", "b", "c"})
-        self.assertEqual(lc.get_set("0_1"), {"d", "e", "f"})
+        self.assertEqual(lc.get_group("0_0"), {"a", "b", "c"})
+        self.assertEqual(lc.get_group("0_1"), {"d", "e", "f"})
         self.assertEqual(lc.get_element_membership("a"), ["0_0"])
 
     def test_conversion(self):
