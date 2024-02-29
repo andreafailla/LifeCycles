@@ -1,19 +1,23 @@
 from collections import Counter
 from math import log, e
 
+import numpy as np
+
+import lifecycles.algorithms.event_analysis as ea
+
 __all__ = [
-    "entropy",
-    "normalized_shannon_entropy",
-    "flow_entropy",
-    "contribution_factor",
-    "difference_factor",
-    "attribute_entropy_change",
+    "_normalized_shannon_entropy",
+    "facet_unicity",
+    "facet_identity",
+    "facet_outflow",
+    "facet_metadata",
     "purity",
     "event_typicality",
+    "stability",
 ]
 
 
-def entropy(labels: list, base: int) -> float:
+def _entropy(labels: list, base=2) -> float:
     """
     computes the Shannon entropy of a list of labels
 
@@ -28,7 +32,7 @@ def entropy(labels: list, base: int) -> float:
     return -sum(p * log(p, base) for p in probabilities)
 
 
-def normalized_shannon_entropy(labels, base=None):
+def _normalized_shannon_entropy(labels, base=2):
     """
     the normalized Shannon entropy is the Shannon entropy divided by the maximum possible entropy
     (logb(n) where n is the number of labels)
@@ -38,34 +42,98 @@ def normalized_shannon_entropy(labels, base=None):
     :return: the normalized Shannon entropy
     """
 
+    # Example of problem: 40,40,1 compared with 40,40
+
     base = e if base is None else base
-    ent = entropy(labels, base)
+
+    ent = _entropy(labels, base)
     max_ent = log(len(list(set(labels))), base)
+    print(ent, max_ent, labels)
 
     normalized_entropy = ent / max_ent
     return normalized_entropy
 
 
-def flow_entropy(labels: list) -> float:
+def _max_second_difference(labels):
     """
-    the flow entropy quantifies the extent to which a target set comes from one (=0) or multiple (->1) flows.
-    It is computed as the normalized Shannon entropy of the set labels of the nodes in the flow.
-    As an example, if the target set receives three elements from set "3_2" and two elements from set "3_3",
-    the flow entropy is the normalized Shannon entropy of the list ["3_2", "3_2", "3_2", "3_3", "3_3"].
+    Function computing the difference between the most frequent attribute value and the second most frequent attribute value
+
+    Args:
+        labels (_type_): the list of labels
+
+    Returns:
+        _type_: _description_
+    """
+    if len(set(labels)) < 2:
+        return 1
+    n = len(labels)
+    counter = Counter(labels)
+    probabilities = [count / n for count in counter.values()]
+    max_val = max(probabilities)
+    second_largest = sorted(probabilities)[-2]
+    return max_val - second_largest
+
+
+def _berger_parker_index(labels):
+    """
+    Dominance index, the probability of the most frequent attribute value in the set
+
+    Args:
+        labels (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    n = len(labels)
+    counter = Counter(labels)
+    probabilities = [count / n for count in counter.values()]
+    max_val = np.max(probabilities)
+    return max_val
+
+
+def _gini_index(labels):
+
+    n = len(labels)
+    counter = Counter(labels)
+    probabilities = [count / n for count in counter.values()]
+
+    array = np.array(probabilities)
+    """Calculate the Gini coefficient of a numpy array."""
+    # based on bottom eq: http://www.statsdirect.com/help/content/image/stat0206_wmf.gif
+    # from: http://www.statsdirect.com/help/default.htm#nonparametric_methods/gini.htm
+
+    array = array.flatten()  # all values are treated equally, arrays must be 1d
+    if np.amin(array) < 0:
+        array -= np.amin(array)  # values cannot be negative
+    array += 0.0000001  # values cannot be 0
+    array = np.sort(array)  # values must be sorted
+    index = np.arange(1, array.shape[0] + 1)  # index per array element
+    n = array.shape[0]  # number of array elements
+    return (np.sum((2 * index - n - 1) * array)) / (
+        n * np.sum(array)
+    )  # Gini coefficient
+
+
+def facet_unicity(labels: list) -> float:
+    """
+    the unicity facet quantifies the extent to which a target set comes from one (=1) or multiple (->0) flows.
 
     :param labels: the list of labels
     :return: the flow entropy
     """
 
     if len(set(labels)) < 2:
-        return 0
+        return 1
     else:
-        return normalized_shannon_entropy(labels)
+        # return gini_index(labels)
+        # return normalized_shannon_entropy(labels)
+        # return berger_parker_index(labels)
+        return _max_second_difference(labels)
 
 
-def contribution_factor(target: set, reference: list):
+def facet_identity(target: set, reference: list):
     """
-    the contribution factor is
+    the identity facet quantifies how much the identity of the target set is shared with the reference sets
 
 
     :param target: the target set
@@ -73,14 +141,21 @@ def contribution_factor(target: set, reference: list):
     :return: the contribution factor
     """
     w = 0
+    persistent = 0
     for r in reference:
         flow = r.intersection(target)
         w += len(flow) * len(flow) / len(r)
-    w = w / len(target)
+        # print(len(flow),len(r),len(target),w)
+        persistent += len(flow)
+    # denominator=len(target)
+    if persistent == 0:
+        return 0
+    denominator = persistent
+    w = w / denominator
     return w
 
 
-def difference_factor(target: set, reference: list) -> float:
+def facet_outflow(target: set, reference: list) -> float:
     """
     the difference factor is the ratio of the number of elements
     in the target set that are not in any of the reference sets
@@ -95,7 +170,7 @@ def difference_factor(target: set, reference: list) -> float:
         return 1.0
 
 
-def attribute_entropy_change(
+def facet_metadata(
     target_labels: list, reference_labels: list, base: int = None
 ) -> float:
     """
@@ -108,7 +183,7 @@ def attribute_entropy_change(
     """
     base = e if base is None else base
     try:
-        target_entropy = normalized_shannon_entropy(target_labels, base)
+        target_entropy = _normalized_shannon_entropy(target_labels, base)
     except ZeroDivisionError:
         target_entropy = 0
 
@@ -116,7 +191,7 @@ def attribute_entropy_change(
     if len(reference_labels) > 0:
         for labels in reference_labels:
             try:
-                reference_entropy += normalized_shannon_entropy(labels, base)
+                reference_entropy += _normalized_shannon_entropy(labels, base)
             except ZeroDivisionError:
                 continue
 
@@ -124,6 +199,17 @@ def attribute_entropy_change(
     else:
         return None
     return target_entropy - reference_entropy
+
+
+def stability(lc: object, direction: str):
+    events = ea.events_all(lc)
+
+    res = 0
+    if len(events[direction]) == 0:
+        return 0
+    for group, event in events[direction].items():
+        res += event["Continue"]
+    return res / len(events[direction])
 
 
 def purity(labels: list) -> tuple:
@@ -150,5 +236,5 @@ def event_typicality(event_scores: dict) -> tuple:
     for ev, score in event_scores.items():
         if score > highest_score:
             highest_score = score
-            event = event
+            event = ev
     return event, highest_score

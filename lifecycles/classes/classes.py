@@ -1,12 +1,14 @@
 import json
 from collections import defaultdict
 
+__all__ = ["LifeCycle"]
+
 
 class LifeCycle(object):
     """
-    A class to represent and analyze temporally-evolving sets.
+    A class to represent and analyze temporally-evolving groups.
 
-    :param dtype: the datatype of the elements in the sets.
+    :param dtype: the datatype of the elements in the groups.
     Supported types are int, float, str, list, and dict.
 
     :return: a LifeCycle object
@@ -29,9 +31,7 @@ class LifeCycle(object):
     def temporal_ids(self) -> list:
         """
         retrieve the temporal ids of the LifeCycle.
-        Temporal ids are positive integers that represent the observation time of a partition.
-
-        :return: a list of temporal ids
+        Temporal ids are integers that represent the observation time of a partition.
 
         :Example:
         >>> lc = LifeCycle()
@@ -41,6 +41,37 @@ class LifeCycle(object):
         [0, 1]
         """
         return self.tids
+
+    def slice(self, start: int, end: int) -> object:
+        """
+        Slice the LifeCycle to keep only a given interval
+
+        :param start: the start of the interval
+        :param end: the end of the interval
+        :return: a new LifeCycle object
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([{5,7}, {6,8}])
+        >>> lc.add_partition([{5,7}, {1,6,8}])
+        >>> sliced = lc.slice(0, 1)
+
+        """
+        temp = LifeCycle(self.dtype)
+        temp.tids = self.tids[start:end]
+        temp.named_sets = {
+            k: v
+            for k, v in self.named_sets.items()
+            if int(k.split("_")[0]) in temp.tids
+        }
+        temp.tid_to_named_sets = {
+            k: v for k, v in self.tid_to_named_sets.items() if int(k) in temp.tids
+        }
+        temp.attributes = {
+            k: v for k, v in self.attributes.items() if int(k) in temp.tids
+        }
+        return temp
 
     def universe_set(self) -> set:
         """
@@ -55,25 +86,24 @@ class LifeCycle(object):
         >>> lc.add_partition([{5,7}, {6,8}]) # at time 1
         >>> lc.universe_set()
         {1, 2, 3, 4, 5, 6, 7, 8}
-
         """
         universe = set()
         for set_ in self.named_sets.values():
             universe = universe.union(set_)
         return universe
 
-    def set_ids(self) -> list:
+    def groups_ids(self) -> list:
         """
-        retrieve the set ids of the lifecycle. Each id is of the form 'tid_sid' where tid is the temporal id and
-        sid is the set id. The set id is a unique identifier of the set within the temporal id.
+        retrieve the group ids of the lifecycle. Each id is of the form 'tid_gid' where tid is the temporal id and
+        gid is the group id. The group id is a unique identifier of the group within the temporal id.
 
-        :return: a list of ids of the temporal sets
+        :return: a list of ids of the temporal groups
 
         :Example:
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([{5,7}, {6,8}])
-        >>> lc.set_ids()
+        >>> lc.groups_ids()
         ['0_0', '0_1', '1_0', '1_1']
         """
         return list(self.named_sets.keys())
@@ -93,6 +123,7 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([{5,7}, {6,8}])
         """
+
         tid = len(self.tids)
         self.tids.append(tid)
 
@@ -154,6 +185,8 @@ class LifeCycle(object):
         >>> lc.get_partition_at(1)
         ['1_0', '1_1', '1_2']
         """
+        if str(tid) not in self.tid_to_named_sets:
+            return []
         return self.tid_to_named_sets[str(tid)]
 
     ############################## Attribute methods ##########################################
@@ -180,7 +213,7 @@ class LifeCycle(object):
         """
         self.attributes[attr_name] = attributes
 
-    def get_attributes(self, attr_name: str, of: object = None) -> dict:
+    def get_attributes(self, attr_name, of=None) -> dict:
         """
         retrieve the temporal attributes of the LifeCycle
 
@@ -211,34 +244,34 @@ class LifeCycle(object):
             return self.attributes[attr_name][of]
 
     ############################## Set methods ##########################################
-    def get_set(self, set_id: str) -> set:
+    def get_group(self, gid: str) -> set:
         """
-        retrieve a set by id
+        retrieve a group by id
 
-        :param set_id: the name of the set to retrieve
-        :return: the set corresponding to the given name
+        :param gid: the name of the group to retrieve
+        :return: the group corresponding to the given name
 
         :Example:
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
-        >>> lc.get_set("0_0")
+        >>> lc.get_group("0_0")
         {1, 2}
         """
-        return self.named_sets[set_id]
+        return self.named_sets[gid]
 
-    def set_iterator(self, tid: int = None) -> iter:
+    def group_iterator(self, tid: int = None) -> iter:
         """
-        returns an iterator over the sets of the LifeCycle.
-        if a temporal id is provided, it will iterate over the sets observed at that time instant
+        returns an iterator over the groups of the LifeCycle.
+        if a temporal id is provided, it will iterate over the groups observed at that time instant
 
-        :param tid: the temporal id of the sets to iterate over. Default is None
-        :return: an iterator over the sets
+        :param tid: the temporal id of the groups to iterate over. Default is None
+        :return: an iterator over the groups
 
         :Example:
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
-        >>> for set_ in lc.set_iterator():
+        >>> for set_ in lc.group_iterator():
         >>>     print(set_)
         {1, 2}
         {3, 4, 5}
@@ -251,35 +284,20 @@ class LifeCycle(object):
             for name in self.get_partition_at(tid):
                 yield self.named_sets[name]
 
-    def get_all_sets(self) -> list:
+    def filter_on_group_size(self, min_size: int = 1, max_size: int = None) -> None:
         """
-        retrieve all sets in the LifeCycle
+        remove groups that do not meet the size criteria
 
-        :return: a list of sets
-
-        :Example:
-        >>> lc = LifeCycle()
-        >>> lc.add_partition([[1,2], [3,4,5]])
-        >>> lc.add_partition([[1,2,3], [4,5]])
-        >>> lc.get_all_sets()
-        [{1, 2}, {3, 4, 5}, {1, 2, 3}, {4, 5}]
-        """
-        return list(self.named_sets.values())
-
-    def filter_on_set_size(self, min_size: int = 1, max_size: int = None) -> None:
-        """
-        remove sets that do not meet the size criteria
-
-        :param min_size: the minimum size of the sets to keep
-        :param max_size: the maximum size of the sets to keep
+        :param min_size: the minimum size of the groups to keep
+        :param max_size: the maximum size of the groups to keep
         :return: None
 
         :Example:
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
-        >>> lc.filter_on_set_size(min_size=3) # remove sets with less than 3 elements
-        >>> lc.set_ids() # only sets 1_0 and 1_1 remain
+        >>> lc.filter_on_group_size(min_size=3) # remove groups with less than 3 elements
+        >>> lc.groups_ids() # only groups 1_0 and 1_1 remain
         ['0_1', '1_0']
         """
 
@@ -335,18 +353,23 @@ class LifeCycle(object):
         return memberships
 
     ############################## Flow methods ##########################################
-    def get_set_flow(
-        self, target: str, direction: str, min_branch_size: int = 1
-    ) -> dict:
+    def group_flow(self, target: str, direction: str, min_branch_size: int = 1) -> dict:
         """
-        compute the flow of a set w.r.t. a given temporal direction. The flow of a set is the collection of sets that
-        contain at least one element of the target set, Returns a dictionary keyed by set name and valued by the
-        intersection of the target set and the set corresponding to the key.
+        compute the flow of a group w.r.t. a given temporal direction. The flow of a group is the collection of groups that
+        contain at least one element of the target group, Returns a dictionary keyed by group name and valued by the
+        intersection of the target group and the group corresponding to the key.
 
-        :param target: the name of the set to analyze
-        :param direction: the temporal direction in which the set is to be analyzed
-        :param min_branch_size: the minimum size of the intersection between the target set and the set corresponding
-        :return: a dictionary keyed by set name and valued by the intersection of the target set and the set
+        :param target: the name of the group to analyze
+        :param direction: the temporal direction in which the group is to be analyzed
+        :param min_branch_size: the minimum size of the intersection between the target group and the group corresponding
+        :return: a dictionary keyed by group name and valued by the intersection of the target group and the group
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.group_flow("0_0", "+")
+        {'1_0': {1, 2}}
         """
         flow = dict()
         tid = int(target.split("_")[0])
@@ -357,10 +380,10 @@ class LifeCycle(object):
         else:
             raise ValueError("direction must either be + or -")
         reference = self.get_partition_at(ref_tid)
-        target_set = self.get_set(target)
+        target_set = self.get_group(target)
 
         for name in reference:
-            set_ = self.get_set(name)
+            set_ = self.get_group(name)
             branch = target_set.intersection(set_)
             if len(branch) >= min_branch_size:
                 flow[name] = branch
@@ -368,14 +391,14 @@ class LifeCycle(object):
 
     def all_flows(self, direction: str, min_branch_size: int = 1) -> dict:
         """
-        compute the flow of all sets w.r.t. a given temporal direction
+        compute the flow of all groups w.r.t. a given temporal direction
         :param direction: the temporal direction in which the sets are to be analyzed
         :param min_branch_size: the minimum size of a branch to be considered
         :return:
         """
         all_flows = dict()
         for name in self.named_sets:
-            all_flows[name] = self.get_set_flow(
+            all_flows[name] = self.group_flow(
                 name, direction, min_branch_size=min_branch_size
             )
 

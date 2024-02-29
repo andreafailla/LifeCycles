@@ -6,6 +6,8 @@ import scipy.stats as stats
 
 from lifecycles.classes.classes import LifeCycle
 
+__all__ = ["validate_flow", "validate_all_flows"]
+
 
 def _generate_random_branch(reference, size):
     """
@@ -75,7 +77,7 @@ def validate_flow(
     :return:
     """
 
-    flow = lc.get_set_flow(target, direction, min_branch_size)
+    flow = lc.group_flow(target, direction, min_branch_size)
     tid = int(target.split("_")[0])
     if direction == "+":
         tid += 1
@@ -84,7 +86,7 @@ def validate_flow(
     else:
         raise ValueError(f"Invalid direction: {direction}")
     # convert to list of ids lists
-    reference = [[id_] * len(lc.get_set(id_)) for id_ in lc.get_partition_at(tid)]
+    reference = [[id_] * len(lc.get_group(id_)) for id_ in lc.get_partition_at(tid)]
 
     validated = dict()
     for name, subset in flow.items():

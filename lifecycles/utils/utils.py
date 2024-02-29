@@ -1,3 +1,11 @@
+__all__ = [
+    "backward_event_names",
+    "forward_event_names",
+    "colormap",
+    "get_group_attribute_values",
+]
+
+
 def backward_event_names():
     return [
         "Birth",
@@ -45,25 +53,25 @@ def colormap():
     }
     """
     return {
-        "Birth": "tab:olive",
+        "Birth": " #808000",
         "Accumulation": "#4CC89F",
         "Growth": "#929292",
         "Expansion": "#5C5C5C",
         "Continue": "#CFBAE1",
         "Merge": "#E34856",
         "Offspring": "#0DAAE9",
-        "Reorganization": "tab:orange",
-        "Death": "tab:olive",
+        "Reorganization": "#FFA500",
+        "Death": " #808000",
         "Dispersion": "#4CC89F",
         "Shrink": "#929292",
         "Reduction": "#5C5C5C",
         "Split": "#E34856",
         "Ancestor": "#0DAAE9",
-        "Disassemble": "tab:orange",
+        "Disassemble": "#FFA500",
     }
 
 
-def get_set_attribute_values(lc: object, target: str, attr_name: str) -> list:
+def get_group_attribute_values(lc: object, target: str, attr_name: str) -> list:
     """
     retrieve the list of attributes of the elements in a set
 
@@ -76,6 +84,6 @@ def get_set_attribute_values(lc: object, target: str, attr_name: str) -> list:
     tid = int(target.split("_")[0])
     attributes = list()
 
-    for elem in lc.get_set(target):
+    for elem in lc.get_group(target):
         attributes.append(lc.get_attributes(attr_name, of=elem)[tid])
     return attributes
