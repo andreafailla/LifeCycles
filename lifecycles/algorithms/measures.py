@@ -1,5 +1,6 @@
 from collections import Counter
 from math import log, e
+from typing import Union, Tuple
 
 import numpy as np
 
@@ -117,9 +118,11 @@ def _gini_index(labels):
 def facet_unicity(labels: list) -> float:
     """
     the unicity facet quantifies the extent to which a target set comes from one (=1) or multiple (->0) flows.
+    It is computed as the difference between the largest and the second largest group size
+    If the target set is composed of a single group, the unicity facet is 1
 
-    :param labels: the list of labels
-    :return: the flow entropy
+    :param labels: the list of group labels
+    :return: the unicity facet
     """
 
     if len(set(labels)) < 2:
@@ -131,9 +134,9 @@ def facet_unicity(labels: list) -> float:
         return _max_second_difference(labels)
 
 
-def facet_identity(target: set, reference: list):
+def facet_identity(target: set, reference: list) -> float:
     """
-    the identity facet quantifies how much the identity of the target set is shared with the reference sets
+    the identity facet quantifies how much the identity of the target set is shared with the reference groups.
 
 
     :param target: the target set
@@ -149,7 +152,7 @@ def facet_identity(target: set, reference: list):
         persistent += len(flow)
     # denominator=len(target)
     if persistent == 0:
-        return 0
+        return 0.0
     denominator = persistent
     w = w / denominator
     return w
@@ -157,7 +160,7 @@ def facet_identity(target: set, reference: list):
 
 def facet_outflow(target: set, reference: list) -> float:
     """
-    the difference factor is the ratio of the number of elements
+    the outflow facet is the ratio of the number of elements
     in the target set that are not in any of the reference sets
 
     :param target: the target set
@@ -172,7 +175,7 @@ def facet_outflow(target: set, reference: list) -> float:
 
 def facet_metadata(
     target_labels: list, reference_labels: list, base: int = None
-) -> float:
+) -> Union[float, None]:
     """
     compute the change in attribute entropy between a target set and a reference set
 
@@ -201,7 +204,16 @@ def facet_metadata(
     return target_entropy - reference_entropy
 
 
-def stability(lc: object, direction: str):
+def stability(lc: object, direction: str) -> float:
+    """
+    compute the temporal partition stability.
+    The stability is the average of the continue events scores.
+
+    :param lc: the lifecycle object
+    :param direction: the temporal direction
+    :return: the stability score
+
+    """
     events = ea.events_all(lc)
 
     res = 0
@@ -212,7 +224,7 @@ def stability(lc: object, direction: str):
     return res / len(events[direction])
 
 
-def purity(labels: list) -> tuple:
+def purity(labels: list) -> Tuple[str, float]:
     """
     compute the purity of a set of labels. Purity is defined as the relative frequency of the most frequent attribute value
 
@@ -223,13 +235,14 @@ def purity(labels: list) -> tuple:
     return most_common_attribute, freq / len(labels)
 
 
-def event_typicality(event_scores: dict) -> tuple:
+def event_typicality(event_scores: dict) -> Tuple[str, float]:
     """
     compute the event's name and its typicality score.
     The typicality score is the highest score among all events scores.
 
     :param event_scores: a dictionary keyed by event name and valued by the event score
     :return: a tuple of the event name and its typicality score
+
     """
     highest_score = 0
     event = ""

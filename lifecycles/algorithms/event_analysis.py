@@ -159,7 +159,24 @@ def analyze_flow(
     return analysis
 
 
-def facets(lc, target, direction):
+def facets(lc: LifeCycle, target: str, direction: str) -> dict:
+    """
+    Compute the unicity, identity, and outflow facets of a target set in a lifecycle object.
+    Also compute the size of the target set.
+
+    :param lc: a LifeCycle object
+    :param target: the name of the target set
+    :param direction: the temporal direction in which the flow is to be analyzed
+    :return: a dictionary containing the facets
+
+    :Example:
+    >>> import lifecycles as lcs
+    >>> # ... create a lc object here ...
+    >>> facets = lcs.facets(lc, "1_0", "+")
+    >>> facets.keys()
+    dict_keys(['U', 'I', 'O', 'size'])
+
+    """
     flow = lc.group_flow(target, direction=direction)
 
     reference_sets = [lc.get_group(name) for name in flow]
@@ -167,7 +184,24 @@ def facets(lc, target, direction):
     return facets
 
 
-def event_weights(lc, target, direction):
+def event_weights(lc: LifeCycle, target: str, direction: str) -> dict:
+    """
+    Compute the event weights of a target set in a lifecycle object.
+
+    :param lc: a LifeCycle object
+    :param target: the name of the target set
+    :param direction: the temporal direction in which the flow is to be analyzed
+    :return: a dictionary containing the event weights
+
+    :Example:
+
+    >>> import lifecycles as lcs
+    >>> # ... create a lc object here ...
+    >>> weights = lcs.event_weights(lc, "1_0", "+")
+    >>> weights.keys()
+    dict_keys(['Death', 'Dispersion', 'Shrink', 'Reduction', 'Continue', 'Split', 'Ancestor', 'Disassemble'])
+
+    """
     names = backward_event_names() if direction == "-" else forward_event_names()
     fscores = facets(lc, target, direction)
     res = _compute_event_scores(fscores)
@@ -178,13 +212,17 @@ def event(lc, target, direction=None):
     """
     Compute the event type and typicality of a target set in a lifecycle.
 
-    Args:
-        lc (_type_): lifecycle object
-        target (_type_): name of the target set
-        direction (list, optional): Defaults to ["+","-"].
+    :param lc: lifecycle object
+    :param target: name of the target set
+    :param direction: temporal direction in which the flow is to be analyzed
+    :return: a dictionary containing the event type and scores
 
-    Returns:
-        _type_: _description_
+    :Example:
+    >>> import lifecycles as lcs
+    >>> # ... create a lc object here ...
+    >>> event = lcs.event(lc, "1_0", "+")
+    >>> event.keys()
+    dict_keys(['+', '-'])
     """
     if direction is None:
         direction = ["+", "-"]

@@ -157,17 +157,19 @@ def _find_asur_continue_events(lc: object) -> list:
     return events
 
 
-def events_asur(lc: object, th=0.5):
+def events_asur(lc: object, th: float = 0.5) -> dict:
     """
     Compute the events in a lifecycle according to Asur et al.
     Return a dictionary of events of the form {event_type: [event1, event2, ...]}
 
-    Args:
-        lc (object): the lifecycle object
-        th (float, optional): threshold for merge and split scores. Defaults to 0.5.
+    :param lc: the lifecycle object
+    :param th: threshold for merge and split scores. Defaults to 0.5.
+    :return: dictionary of events
 
-    Returns:
-        _type_: _description_
+    :Reference:
+        Asur, S., Parthasarathy, S., Ucar, D.: An event-based framework for charac-
+        terizing the evolutionary behavior of interaction graphs. ACM Transactions on
+        Knowledge Discovery from Data (TKDD) 3(4), 1–36 (2009)
     """
     return {
         "merge": _find_asur_merge_events(lc, th),
@@ -178,17 +180,18 @@ def events_asur(lc: object, th=0.5):
     }
 
 
-def event_graph_greene(lc: object, th=0.1):
+def event_graph_greene(lc: object, th: float = 0.1) -> list:
     """
     Compute the event graph in a lifecycle according to Greene et al.
     Return a list of match between groups, i.e., edges of the event graph.
 
-    Args:
-        lc (object): the lifecycle object
-        th (float, optional): threshold for the Jaccard index. Defaults to 0.1 according to best results in the original paper.
+    :param lc: the lifecycle object
+    :param th: threshold for the Jaccard index. Defaults to 0.1 according to best results in the original paper.
+    :return: list of match between groups
 
-    Returns:
-        _type_: _description_
+    :Reference:
+        Greene, D., Doyle, D., Cunningham, P.: Tracking the evolution of communities in dynamic social networks. In: Proceedings of the 2010 International Conference on Advances in Social Networks Analysis and Mining (ASONAM 2010), pp. 176–183. IEEE (2010)
+
     """
     events = []
     for t in lc.temporal_ids()[0:-1]:

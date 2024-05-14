@@ -6,58 +6,50 @@ __all__ = [
 ]
 
 
-def backward_event_names():
+def backward_event_names() -> list:
+    """
+    return the list of backward event names
+    """
     return [
         "Birth",
         "Accumulation",
         "Growth",
         "Expansion",
-        "Continue",
+        "Continuation",
         "Merge",
         "Offspring",
         "Reorganization",
     ]
 
 
-def forward_event_names():
+def forward_event_names() -> list:
+    """
+    return the list of forward event names
+    """
     return [
         "Death",
         "Dispersion",
         "Shrink",
         "Reduction",
-        "Continue",
+        "Continuation",
         "Split",
         "Ancestor",
         "Disassemble",
     ]
 
 
-def colormap():
+def colormap() -> dict:
     """
-    return {
-        "Birth": "tab:olive",
-        "Accumulation": "tab:gray",
-        "Growth": "tab:brown",
-        "Expansion": "tab:purple",
-        "Continue": "tab:pink",
-        "Merge": "tab:red",
-        "Offspring": "tab:blue",
-        "Reorganization": "tab:orange",
-        "Death": "tab:olive",
-        "Dispersion": "tab:gray",
-        "Shrink": "tab:brown",
-        "Reduction": "tab:purple",
-        "Split": "tab:red",
-        "Ancestor": "tab:blue",
-        "Disassemble": "tab:orange",
-    }
+    return a dictionary of colors for each event type.
+    this is used to color the events in the visualization
     """
+
     return {
         "Birth": " #808000",
         "Accumulation": "#4CC89F",
         "Growth": "#929292",
         "Expansion": "#5C5C5C",
-        "Continue": "#CFBAE1",
+        "Continuation": "#CFBAE1",
         "Merge": "#E34856",
         "Offspring": "#0DAAE9",
         "Reorganization": "#FFA500",

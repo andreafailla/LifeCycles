@@ -44,7 +44,7 @@ class LifeCycle(object):
 
     def slice(self, start: int, end: int) -> object:
         """
-        Slice the LifeCycle to keep only a given interval
+        slice the LifeCycle to keep only a given interval
 
         :param start: the start of the interval
         :param end: the end of the interval
@@ -220,8 +220,7 @@ class LifeCycle(object):
         :param attr_name: the name of the attribute
         :param of: the element for which to retrieve the attributes. If None, all attributes are returned
 
-        :return: a dictionary keyed by element id and valued by a dictionary keyed by temporal id and valued by the
-        attribute value
+        :return: a dictionary keyed by element id and valued by a dictionary keyed by temporal id and valued by the attribute value
 
 
         :Example:
@@ -334,6 +333,7 @@ class LifeCycle(object):
     def get_all_element_memberships(self) -> dict:
         """
         retrieve the list of sets that contain each element in the LifeCycle
+
         :return: a dictionary keyed by element and valued by a list of set names that contain the element
 
         :Example:
@@ -392,9 +392,18 @@ class LifeCycle(object):
     def all_flows(self, direction: str, min_branch_size: int = 1) -> dict:
         """
         compute the flow of all groups w.r.t. a given temporal direction
+
         :param direction: the temporal direction in which the sets are to be analyzed
         :param min_branch_size: the minimum size of a branch to be considered
-        :return:
+        :return: a dictionary keyed by group name and valued by the flow of the group
+
+        :Example:
+        >>> lc = LifeCycle()
+        >>> lc.add_partition([[1,2], [3,4,5]])
+        >>> lc.add_partition([[1,2,3], [4,5]])
+        >>> lc.all_flows("+")
+        {'0_0': {'1_0': {1, 2}}, '0_1': {'1_0': {3}, '1_1': {4, 5}}}
+
         """
         all_flows = dict()
         for name in self.named_sets:
