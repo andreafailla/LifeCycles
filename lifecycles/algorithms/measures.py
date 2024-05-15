@@ -49,7 +49,7 @@ def _normalized_shannon_entropy(labels, base=2):
 
     ent = _entropy(labels, base)
     max_ent = log(len(list(set(labels))), base)
-    print(ent, max_ent, labels)
+    # print(ent, max_ent, labels)
 
     normalized_entropy = ent / max_ent
     return normalized_entropy

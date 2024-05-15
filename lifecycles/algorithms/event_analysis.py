@@ -44,8 +44,8 @@ def _analyze_one_attr(target, reference, attr) -> dict:
         ent = 0
 
     return {
-        f"{attr}_U": ent,
-        f"{attr}_U_change": facet_metadata(target, reference, base=2),
+        f"{attr}_H": ent,
+        f"{attr}_H_change": facet_metadata(target, reference, base=2),
         f"{attr}_purity": pur,
         f"{attr}_mca": mca,
     }
