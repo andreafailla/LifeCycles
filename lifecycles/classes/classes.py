@@ -68,9 +68,10 @@ class LifeCycle(object):
         temp.tid_to_named_sets = {
             k: v for k, v in self.tid_to_named_sets.items() if int(k) in temp.tids
         }
-        temp.attributes = {
-            k: v for k, v in self.attributes.items() if int(k) in temp.tids
-        }
+        temp_attrs = {}
+        for attr_name, attr in self.attributes.items():
+            temp_attrs[attr_name] = {k: v for k, v in attr.items() if k in temp.tids}
+        temp.attributes = temp_attrs
         return temp
 
     def universe_set(self) -> set:
