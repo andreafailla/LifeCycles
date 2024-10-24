@@ -10,4 +10,4 @@ jobs:
       - uses: psf/black@stable
         with:
           options: "--check --verbose"
-          src: "./package_name" # replace with your code path
+          src: "./lifecycles" # replace with your code path
