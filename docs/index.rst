@@ -25,13 +25,23 @@ LifeCycles Dev Team
 `Andrea Failla`_        Library Design, implementation,
                         Documentation
 `Salvatore Citraro`_    Implementation
+`Rémy Cazabet`_         Implementation
 ======================= ==============================
 
 .. note:: If you use ``lifecycles`` in your research, please cite it using the following BibTeX entry:
 
    .. code-block:: bibtex
 
-      @misc{,
+      @article{Failla2024describing,
+        title = {Describing group evolution in temporal data using multi-faceted events},
+          ISSN = {1573-0565},
+          url = {http://dx.doi.org/10.1007/s10994-024-06600-4},
+          DOI = {10.1007/s10994-024-06600-4},
+          journal = {Machine Learning},
+          publisher = {Springer Science and Business Media LLC},
+          author = {Failla,  Andrea and Cazabet,  Rémy and Rossetti,  Giulio and Citraro,  Salvatore},
+          year = {2024},
+          month = aug
         }
 
 .. toctree::
@@ -46,6 +56,7 @@ LifeCycles Dev Team
 
 .. _`Andrea Failla`: https://github.com/andreafailla
 .. _`Salvatore Citraro`: https://github.com/dsalvaz
+.. _`Rémy Cazabet`: https://cazabetremy.fr
 .. _`Source`: https://github.com/andreafailla/lifecycles
 .. _`Distribution`: https://pypi.python.org/pypi/lifecycles
 .. _`SoBigData++`: https://sobigdata.d4science.org/group/sobigdata-gateway/explore?siteId=20371853

@@ -6,17 +6,22 @@
 [![PyPI version](https://badge.fury.io/py/LifeCycles.svg)](https://badge.fury.io/py/LifeCycles)
 [![SBD++](https://img.shields.io/badge/Available%20on-SoBigData%2B%2B-green)](https://sobigdata.d4science.org/group/sobigdata-gateway/explore?siteId=20371853)
 
-``LifeCycles`` is a Python software package that allows to represent and analyze 
+``LifeCycles`` is a Python software package that allows to represent and analyze the temporal dynamics of (groups of) data points/nodes. The library provides a set of tools to model and analyze the temporal evolution of data points/nodes, and to extract meaningful patterns from the data.
 
 
 If you use ``LifeCycles`` as support to your research consider citing:
  
-> Authors
-> 
-> **Title**
-> 
-> *Journal*
-> 2023
+>@article{Failla2024describing,
+>        title = {Describing group evolution in temporal data using multi-faceted events},
+>          ISSN = {1573-0565},
+>          url = {http://dx.doi.org/10.1007/s10994-024-06600-4},
+>          DOI = {10.1007/s10994-024-06600-4},
+>          journal = {Machine Learning},
+>          publisher = {Springer Science and Business Media LLC},
+>          author = {Failla,  Andrea and Cazabet,  Rémy and Rossetti,  Giulio and Citraro,  Salvatore},
+>          year = {2024},
+>          month = aug
+        }
 
 ## Tutorial and Online Environments
 

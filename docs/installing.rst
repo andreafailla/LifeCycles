@@ -60,7 +60,6 @@ Python
 To use ``lifecycles`` you need Python 3.9 or later.
 
 The easiest way to get Python and most optional packages is to install the Enthought Python distribution “Canopy” or using Anaconda.
-
 There are several other distributions that contain the key packages you need for scientific computing. 
 
 

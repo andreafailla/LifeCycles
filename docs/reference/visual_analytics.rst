@@ -13,8 +13,11 @@ and how such evolution can be described in terms of archetypal events.
 
 .. autosummary::
     :toctree: viz/
+    :nosignatures:
 
-    lifecycles.viz.plot_set_flow
+    lifecycles.viz.plot_flow
     lifecycles.viz.plot_event_radar
     lifecycles.viz.plot_event_radars
+    lifecycles.viz.typicality_distribution
+
 

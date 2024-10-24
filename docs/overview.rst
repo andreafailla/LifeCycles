@@ -7,9 +7,6 @@ The analysis of such entities – be they graph nodes, records in a dataset, or 
 as well as of the groups they form, is fundamental in a wide range of fields,
 including social network analysis, epidemiology, and business intelligence.
 
-``lifecycles`` provides a set of tools to model and analyze the evolution of these clusters in
-... to be continued ...
-
 -----
 Goals
 -----
@@ -21,7 +18,7 @@ Goals
 - tools to investigate the relationship between the evolution of clusters and individual entities' metadata;
 - visual analytics facilities to summarize analytical results.
 
-Future releases will include enhanced support statistical analysis to assess the significance of the observed patterns,
+Future releases will include enhanced support for statistical analysis to assess the significance of the observed patterns,
 and to support the development of predictive models.
 
 -----------------
