@@ -15,25 +15,26 @@ These methods are used to store and access temporally ordered partitions of the 
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
     LifeCycle.add_partition
     LifeCycle.add_partitions_from
     LifeCycle.get_partition_at
 
 ------------------------
-Set-based Methods
+Group-based Methods
 ------------------------
 
 These methods are used to retrieve, filter, and analyze the individual clusters in the data.
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
-    LifeCycle.get_set
-    LifeCycle.get_all_sets
-    LifeCycle.set_iterator
-    LifeCycle.filter_on_set_size
-    LifeCycle.get_set_flow
+    LifeCycle.get_group
+    LifeCycle.group_iterator
+    LifeCycle.filter_on_group_size
+    LifeCycle.group_flow
     LifeCycle.all_flows
 
 ------------------------
@@ -44,6 +45,7 @@ These methods are used to retrieve the membership of individual items in the dat
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
     LifeCycle.get_element_membership
     LifeCycle.get_all_element_memberships
@@ -56,6 +58,7 @@ These methods are used to store and access time-changing metadata assigned to th
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
     LifeCycle.set_attributes
     LifeCycle.get_attributes
@@ -69,10 +72,12 @@ These methods are used to retrieve fundamental information about the data such a
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
-    LifeCycle.set_ids
+    LifeCycle.groups_ids
     LifeCycle.temporal_ids
     LifeCycle.universe_set
+    LifeCycle.slice
 
 
 
@@ -85,6 +90,7 @@ These methods are used to read and write ``LifeCycle`` objects to and from disk.
 
 .. autosummary::
     :toctree: classes/
+    :nosignatures:
 
     LifeCycle.to_dict
     LifeCycle.write_json

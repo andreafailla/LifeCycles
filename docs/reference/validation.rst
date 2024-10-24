@@ -8,6 +8,7 @@ This module contains some
 
 .. autosummary::
     :toctree: validation/
+    :nosignatures:
 
     lifecycles.validation.validate_flow
     lifecycles.validation.validate_all_flows
