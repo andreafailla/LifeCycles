@@ -220,7 +220,7 @@ def stability(lc: object, direction: str) -> float:
     if len(events[direction]) == 0:
         return 0
     for group, event in events[direction].items():
-        res += event["Continue"]
+        res += event["Continuation"]
     return res / len(events[direction])
 
 
