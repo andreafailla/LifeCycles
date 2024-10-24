@@ -77,7 +77,7 @@ class LifeCycle(object):
     def universe_set(self) -> set:
         """
         retrieve the universe set.
-        The universe set is the union of all sets in the LifeCycle
+        The universe set is the union of all groups in the LifeCycle
 
         :return: the universe set
 
@@ -112,11 +112,11 @@ class LifeCycle(object):
     ############################## Partition methods ##########################################
     def add_partition(self, partition: list) -> None:
         """
-        add a partition to the LifeCycle. A partition is a list of sets observed at a given time instant. Each
-        partition will be assigned a unique id (tid) corresponding to the observation time, and each set in the
+        add a partition to the LifeCycle. A partition is a list of groups observed at a given time instant. Each
+        partition will be assigned a unique id (tid) corresponding to the observation time, and each group in the
         partition will be assigned a unique name
 
-        :param partition: a collection of sets
+        :param partition: a collection of groups
         :return: None
 
         :Example:
@@ -246,7 +246,7 @@ class LifeCycle(object):
         else:
             return self.attributes[attr_name][of]
 
-    ############################## Set methods ##########################################
+    ############################## Grroup methods ##########################################
     def get_group(self, gid: str) -> set:
         """
         retrieve a group by id
@@ -276,8 +276,8 @@ class LifeCycle(object):
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
-        >>> for set_ in lc.group_iterator():
-        >>>     print(set_)
+        >>> for group in lc.group_iterator():
+        >>>     print(group)
         >>> # {1, 2}
         >>> # {3, 4, 5}
         >>> # {1, 2, 3}
@@ -319,10 +319,10 @@ class LifeCycle(object):
     ############################## Element-centric methods ##########################################
     def get_element_membership(self, element: object) -> list:
         """
-        retrieve the list of sets that contain a given element
+        retrieve the list of groups that contain a given element
 
         :param element: the element for which to retrieve the memberships
-        :return: a list of set names that contain the given element
+        :return: a list of group names that contain the given element
 
         :Example:
         >>> lc = LifeCycle()
@@ -341,9 +341,9 @@ class LifeCycle(object):
 
     def get_all_element_memberships(self) -> dict:
         """
-        retrieve the list of sets that contain each element in the LifeCycle
+        retrieve the list of groups that contain each element in the LifeCycle
 
-        :return: a dictionary keyed by element and valued by a list of set names that contain the element
+        :return: a dictionary keyed by element and valued by a list of group names that contain the element
 
         :Example:
         >>> lc = LifeCycle()
@@ -403,7 +403,7 @@ class LifeCycle(object):
         """
         compute the flow of all groups w.r.t. a given temporal direction
 
-        :param direction: the temporal direction in which the sets are to be analyzed
+        :param direction: the temporal direction in which the groups are to be analyzed
         :param min_branch_size: the minimum size of a branch to be considered
         :return: a dictionary keyed by group name and valued by the flow of the group
 
