@@ -1,6 +1,8 @@
 # Only for ReadTheDocs
-numpy>=1.15.*
-scikit-learn>=0.21.*
-sphinx==1.7.5 # pyup: ignore
-sphinx_rtd_theme==0.4.1 # pyup: ignore
-mock
+matplotlib
+pandas
+plotly
+seaborn
+numpy
+scipy
+sphinx_rtd_theme
