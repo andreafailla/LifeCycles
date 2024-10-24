@@ -1,7 +1,7 @@
 # LifeCycles
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/LifeCycles/badge/?version=latest)](https://LifeCycles.readthedocs.io//en/latest/?badge=latest)
-[![Updates](https://pyup.io/repos/github/andreafailla/LifeCycles/shield.svg)](https://pyup.io/repos/github/GiulioRossetti/LifeCycles/)
+[![Documentation Status](https://readthedocs.org/projects/lifecycles/badge/?version=latest)](https://lifecycles.readthedocs.io//en/latest/?badge=latest)
+[![Updates](https://pyup.io/repos/github/andreafailla/LifeCycles/shield.svg)](https://pyup.io/repos/github/andreafailla/LifeCycles/)
 [![pyversions](https://img.shields.io/pypi/pyversions/LifeCycles.svg)](https://badge.fury.io/py/LifeCycles)
 [![PyPI version](https://badge.fury.io/py/LifeCycles.svg)](https://badge.fury.io/py/LifeCycles)
 [![SBD++](https://img.shields.io/badge/Available%20on-SoBigData%2B%2B-green)](https://sobigdata.d4science.org/group/sobigdata-gateway/explore?siteId=20371853)
