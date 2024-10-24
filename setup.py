@@ -1,9 +1,10 @@
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
+from setuptools import setup, find_packages
+
 __author__ = "Andrea Failla"
-__license__ = ""
+__license__ = "MIT"
 __email__ = "andrea.failla@phd.unipi.it"
 
 
@@ -21,7 +22,7 @@ setup(
     name="lifecycles",
     version="0.0.1",
     license="",
-    description="Package description",
+    description="Package to analyze the temporal dynamics of (groups of) entities/nodes",
     url="https://github.com/andreafailla/lifecycles",
     author="Andrea Failla",
     author_email="andrea.failla@phd.unipi.it",
@@ -36,14 +37,13 @@ setup(
         "Topic :: Software Development :: Build Tools",
         # Pick your license as you wish (should match "license" above)
         "License :: OSI Approved :: ",
-        "Operating System :: POSIX :: Other",
-        "Operating System :: MacOS",
+        "Operating System :: OS Independent",
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
     ],
-    keywords="keyword1 keyword2 keyword3",
+    keywords="clusters communities analysis",
     install_requires=requirements,
     long_description=long_description,
     long_description_content_type="text/markdown",

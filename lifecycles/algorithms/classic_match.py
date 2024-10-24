@@ -170,6 +170,14 @@ def events_asur(lc: object, th: float = 0.5) -> dict:
         Asur, S., Parthasarathy, S., Ucar, D.: An event-based framework for charac-
         terizing the evolutionary behavior of interaction graphs. ACM Transactions on
         Knowledge Discovery from Data (TKDD) 3(4), 1–36 (2009)
+
+    :Example:
+
+    >>> from lifecycles import Lifecycle
+    >>> from lifecycles.algorithms.classic_match import events_asur
+    >>> lc = Lifecycle()
+    >>> # add some data and then...
+    >>> events = events_asur(lc, 0.5)
     """
     return {
         "merge": _find_asur_merge_events(lc, th),
@@ -192,6 +200,14 @@ def event_graph_greene(lc: object, th: float = 0.1) -> list:
     :Reference:
         Greene, D., Doyle, D., Cunningham, P.: Tracking the evolution of communities in dynamic social networks. In: Proceedings of the 2010 International Conference on Advances in Social Networks Analysis and Mining (ASONAM 2010), pp. 176–183. IEEE (2010)
 
+
+    :Example:
+
+    >>> from lifecycles import Lifecycle
+    >>> from lifecycles.algorithms.classic_match import event_graph_greene
+    >>> lc = Lifecycle()
+    >>> # add some data and then...
+    >>> events = event_graph_greene(lc, 0.1)
     """
     events = []
     for t in lc.temporal_ids()[0:-1]:

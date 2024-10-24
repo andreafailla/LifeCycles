@@ -165,7 +165,12 @@ def facet_outflow(target: set, reference: list) -> float:
 
     :param target: the target set
     :param reference: the reference sets
-    :return: the difference factor
+    :return: the outflow facet
+
+    :Example:
+
+    >>> facet_outflow({1,2,3},[{1,2,3},{4,5,6}])
+    0.5
     """
     try:
         return len(target.difference(set.union(*reference))) / len(target)
@@ -230,6 +235,11 @@ def purity(labels: list) -> Tuple[str, float]:
 
     :param labels: the list of labels
     :return: a tuple of the most frequent attribute value and its frequency
+
+    :Example:
+
+    >>> purity(['a','a','b','b','b'])
+    ('b', 0.6)
     """
     most_common_attribute, freq = Counter(labels).most_common(1)[0]
     return most_common_attribute, freq / len(labels)

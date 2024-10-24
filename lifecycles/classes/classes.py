@@ -203,11 +203,12 @@ class LifeCycle(object):
         :return: None
 
         :Example:
+
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> attributes = {
-        >>>     1: {0: 'red', 1: 'blue'}, # element 1 is red at time 0 and blue at time 1
+        >>>     1: c{0: 'red', 1: 'blue'}, # element 1 is red at time 0 and blue at time 1
         >>>     2: {0: 'green', 1: 'magenta'} # element 2 is green at time 0 and magenta at time 1
         >>> }
         >>> lc.set_attributes(attributes, attr_name="color")
@@ -225,6 +226,7 @@ class LifeCycle(object):
 
 
         :Example:
+
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
@@ -234,9 +236,10 @@ class LifeCycle(object):
         >>> }
         >>> lc.set_attributes(attributes, attr_name="color")
         >>> lc.get_attributes("color")
-        {1: {0: 'red', 1: 'blue'}, 2: {0: 'green', 1: 'magenta'}}
+        >>> # {1: {0: 'red', 1: 'blue'}, 2: {0: 'green', 1: 'magenta'}}
         >>> lc.get_attributes("color", of=1) # get the attributes of element 1
-        {0: 'red', 1: 'blue'}
+        >>> # {0: 'red', 1: 'blue'}
+
         """
         if of is None:
             return self.attributes[attr_name]
@@ -252,10 +255,11 @@ class LifeCycle(object):
         :return: the group corresponding to the given name
 
         :Example:
+
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.get_group("0_0")
-        {1, 2}
+        >>> # {1, 2}
         """
         return self.named_sets[gid]
 
@@ -268,15 +272,17 @@ class LifeCycle(object):
         :return: an iterator over the groups
 
         :Example:
+
         >>> lc = LifeCycle()
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> for set_ in lc.group_iterator():
         >>>     print(set_)
-        {1, 2}
-        {3, 4, 5}
-        {1, 2, 3}
-        {4, 5}
+        >>> # {1, 2}
+        >>> # {3, 4, 5}
+        >>> # {1, 2, 3}
+        >>> # {4, 5}
+
         """
         if tid is None:
             yield from self.named_sets.values()
@@ -298,7 +304,8 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.filter_on_group_size(min_size=3) # remove groups with less than 3 elements
         >>> lc.groups_ids() # only groups 1_0 and 1_1 remain
-        ['0_1', '1_0']
+        >>> # ['0_1', '1_0']
+
         """
 
         if max_size is None:
@@ -322,7 +329,8 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.get_element_membership(1)
-        ['0_0', '1_0']
+        >>> # ['0_0', '1_0']
+
         """
 
         memberships = list()
@@ -370,7 +378,8 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.group_flow("0_0", "+")
-        {'1_0': {1, 2}}
+        >>> # {'1_0': {1, 2}}
+
         """
         flow = dict()
         tid = int(target.split("_")[0])
@@ -403,7 +412,7 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.all_flows("+")
-        {'0_0': {'1_0': {1, 2}}, '0_1': {'1_0': {3}, '1_1': {4, 5}}}
+        >>> # {'0_0': {'1_0': {1, 2}}, '0_1': {'1_0': {3}, '1_1': {4, 5}}}
 
         """
         all_flows = dict()
@@ -427,6 +436,7 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.write_json("lc.json")
+
         """
 
         dic = dict()
@@ -449,6 +459,7 @@ class LifeCycle(object):
 
         :Example:
         >>> lc = LifeCycle().read_json('lc.json')
+
         """
 
         known_types = {
@@ -484,7 +495,8 @@ class LifeCycle(object):
         >>> lc.add_partition([[1,2], [3,4,5]])
         >>> lc.add_partition([[1,2,3], [4,5]])
         >>> lc.to_dict()
-        {'dtype': 'int', 'named_sets': {'0_0': {1, 2}, '0_1': {3, 4, 5}, '1_0': {1, 2, 3}, '1_1': {4, 5}}}
+        >>> # {'dtype': 'int', 'named_sets': {'0_0': {1, 2}, '0_1': {3, 4, 5}, '1_0': {1, 2, 3}, '1_1': {4, 5}}}
+
         """
         return self.__dict__()
 

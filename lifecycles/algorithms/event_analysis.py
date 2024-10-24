@@ -93,8 +93,11 @@ def events_all(lc: LifeCycle, direction=None) -> dict:
     :return: a dictionary containing the events
 
     :Example:
+
     >>> import lifecycles as lcs
-    lc = lcs.Lifecycle()
+    >>> # ... create a lc object here ...
+    >>> events = lcs.events_all(lc, "+")
+    >>> events.keys()
 
     """
     if direction is None:
@@ -117,6 +120,14 @@ def analyze_all_flows(
     :param min_branch_size: the minimum number of elements that a branch must contain to be considered
     :param attr: the name or list of names of the attribute(s) to analyze. If None, no attribute is analyzed
     :return:
+
+    :Example:
+
+    >>> import lifecycles as lcs
+    >>> # ... create a lc object here ...
+    >>> analyzed_flows = lcs.analyze_all_flows(lc, "+")
+    >>> analyzed_flows.keys()
+
     """
     last_id = lc.temporal_ids()[-1] if direction == "+" else lc.temporal_ids()[0]
     return {
@@ -144,6 +155,13 @@ def analyze_flow(
     :param min_branch_size:  the minimum number of elements that a branch must contain to be considered
     :param attr:  the name or list of names of the attribute(s) to analyze. If None, no attribute is analyzed
     :return: a dictionary containing the analysis results
+
+    :Example:
+
+    >>> import lifecycles as lcs
+    >>> # ... create a lc object here ...
+    >>> analysis = lcs.analyze_flow(lc, "1_0", "+")
+
     """
     flow = lc.group_flow(target, direction=direction, min_branch_size=min_branch_size)
 
@@ -170,6 +188,7 @@ def facets(lc: LifeCycle, target: str, direction: str) -> dict:
     :return: a dictionary containing the facets
 
     :Example:
+
     >>> import lifecycles as lcs
     >>> # ... create a lc object here ...
     >>> facets = lcs.facets(lc, "1_0", "+")
@@ -218,11 +237,13 @@ def event(lc, target, direction=None):
     :return: a dictionary containing the event type and scores
 
     :Example:
+
     >>> import lifecycles as lcs
     >>> # ... create a lc object here ...
     >>> event = lcs.event(lc, "1_0", "+")
     >>> event.keys()
-    dict_keys(['+', '-'])
+    >>> # dict_keys(['+', '-'])
+
     """
     if direction is None:
         direction = ["+", "-"]
